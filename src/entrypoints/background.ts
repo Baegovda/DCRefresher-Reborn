@@ -1,6 +1,12 @@
 import {onMessage, sendMessage} from "@/http/messaging";
 import {migrateLocalStorageData} from "@/storage/migration";
 import {databaseStorage} from "@/storage/wxtStorage";
+import {
+    applyExtensionUpdate,
+    checkExtensionUpdate,
+    getExtensionUpdateStatus,
+    scheduleUpdateChecks
+} from "@/core/updateCheck";
 
 export default defineBackground(() => {
     migrateLocalStorageData().catch((error) => {
@@ -108,6 +114,12 @@ export default defineBackground(() => {
     });
 
     void createContextMenus();
+
+    scheduleUpdateChecks();
+
+    onMessage("getUpdateStatus", () => getExtensionUpdateStatus());
+    onMessage("checkForUpdate", ({data}) => checkExtensionUpdate(Boolean(data?.force)));
+    onMessage("applyUpdate", () => applyExtensionUpdate());
 
     browser.runtime.onStartup.addListener(() => {
         void createContextMenus();

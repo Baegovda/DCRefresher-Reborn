@@ -1,4 +1,5 @@
 import {defineExtensionMessaging} from "@webext-core/messaging";
+import type {ExtensionUpdateStatus} from "@/core/updateCheck";
 
 // ===== Content → Background =====
 
@@ -45,6 +46,11 @@ interface ProtocolMap {
 
     // Popup → Content(활성 탭): 메모 입력 요청
     refresherRequestMemoAsk(data: { type: RefresherMemoType; user: string }): void;
+
+    // Popup/Background: GitHub 릴리즈 업데이트
+    getUpdateStatus(): ExtensionUpdateStatus;
+    checkForUpdate(data?: { force?: boolean }): ExtensionUpdateStatus;
+    applyUpdate(): { ok: boolean; error?: string };
 }
 
 export const {sendMessage, onMessage} = defineExtensionMessaging<ProtocolMap>();

@@ -15,14 +15,18 @@ export default defineConfig({
         description: "디시인사이드 개선 확장 프로그램",
         permissions: [
             "activeTab",
+            "alarms",
             "contextMenus",
+            "downloads",
+            "notifications",
             "storage",
             "scripting",
             "unlimitedStorage",
             "clipboardWrite"
         ],
         host_permissions: [
-            "https://*.dcinside.com/*"
+            "https://*.dcinside.com/*",
+            "https://api.github.com/*"
         ],
         web_accessible_resources: [
             {

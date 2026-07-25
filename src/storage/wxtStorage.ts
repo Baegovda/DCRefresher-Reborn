@@ -60,6 +60,15 @@ export const popupLastTabStorage = storage.defineItem<number>("local:refresher:p
     defaultValue: 0
 });
 
+export const updateStorage = {
+    lastCheck: storage.defineItem<number>("local:refresher:update:lastCheck", {defaultValue: 0}),
+    latestVersion: storage.defineItem<string>("local:refresher:update:latestVersion", {defaultValue: ""}),
+    updateAvailable: storage.defineItem<boolean>("local:refresher:update:available", {defaultValue: false}),
+    chromeDownloadUrl: storage.defineItem<string>("local:refresher:update:chromeUrl", {defaultValue: ""}),
+    releaseUrl: storage.defineItem<string>("local:refresher:update:releaseUrl", {defaultValue: ""}),
+    checkError: storage.defineItem<string>("local:refresher:update:error", {defaultValue: ""})
+};
+
 // ===== 데이터베이스 (IP/Ban) =====
 
 export const databaseStorage = {

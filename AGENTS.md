@@ -83,7 +83,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.3`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.4`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
@@ -247,6 +247,16 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 
 <!-- AI: newest first. humans don't read this. -->
 
+### [2026-07-26] v5.1.4 | type: patch | release: no
+
+- **task**: fix COMMENT block not persisting after page refresh / mode toggle
+- **files**: core/block.ts, block/index.ts, package.json, AGENTS.md
+- **root_cause**: block cache loaded async but filters ran before ready; rerun only hid elements without reset on mode/list change
+- **fix**: export blockReady promise; await before registering filters; reset data-refresher-blocked then re-apply; debounced rerun on refresh + comment DOM observer
+- **verify**: pending
+- **commit**: 91b5523
+- **tag**: none
+
 ### [2026-07-26] v5.1.3 | type: patch | release: no
 
 - **task**: fix COMMENT block not working on dcinside comments
@@ -254,7 +264,7 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 - **root_cause**: comment text read only inside .cmt_info ancestor of .ub-writer (sibling layout); no re-apply on block list change; preview compared raw HTML memo
 - **fix**: resolve comment via li.ub-content; dedicated .usertxt filter; refresh event re-run; plainCommentText in preview
 - **verify**: pending
-- **commit**: pending
+- **commit**: 6c6eda4
 - **tag**: none
 
 ### [2026-07-26] v5.1.2 | type: docs | release: no

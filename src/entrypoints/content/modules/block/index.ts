@@ -1,4 +1,4 @@
-import block from "@/core/block";
+import block, {blockReady} from "@/core/block";
 import filter from "@/core/filtering";
 
 import {eventBus} from "@/core/eventbus";
@@ -41,6 +41,8 @@ export default {
         uuid2: null,
         uuid3: null,
         refreshHandler: null,
+        commentObserver: null,
+        rerunTimer: null,
         selected: {
             nick: null,
             uid: null,
@@ -72,16 +74,30 @@ export default {
             default: false
         }
     },
-    func() {
+    async func() {
+        await blockReady;
+
         const gallery = queryString("id");
 
         const hideElement = (element: HTMLElement, blur = false) => {
+            element.dataset.refresherBlocked = "true";
+
             if (blur) {
                 element.classList.add("refresherBlur");
+                element.style.removeProperty("display");
                 return;
             }
 
+            element.classList.remove("refresherBlur");
             element.style.display = "none";
+        };
+
+        const resetBlockedElements = () => {
+            for (const element of document.querySelectorAll<HTMLElement>("[data-refresher-blocked]")) {
+                element.style.removeProperty("display");
+                element.classList.remove("refresherBlur");
+                delete element.dataset.refresherBlocked;
+            }
         };
 
         const hideReplySibling = (content: HTMLElement) => {
@@ -154,9 +170,39 @@ export default {
             hideElement(hideTarget, this.status.blur);
         };
 
+        const applyDcconBlock = (element: HTMLElement) => {
+            if (!gallery) return;
+
+            const src = element.getAttribute("src") ?? element.getAttribute("data-src") ?? "";
+            const dccon = src.replace(/^.*no=/g, "").replace(/^&.*$/g, "");
+
+            if (!block.check("DCCON", dccon, gallery)) return;
+
+            const comment = element.closest<HTMLElement>(".ub-content");
+            const hideTarget = comment ?? element.closest<HTMLElement>(".comment_dccon");
+
+            if (!hideTarget) return;
+
+            hideReplySibling(hideTarget);
+            hideElement(hideTarget, this.status.blur);
+        };
+
         const rerunBlockFilters = () => {
+            resetBlockedElements();
             document.querySelectorAll<HTMLElement>(".ub-writer").forEach(applyWriterBlock);
             document.querySelectorAll<HTMLElement>(COMMENT_TEXT_SELECTOR).forEach(applyCommentTextBlock);
+            document.querySelectorAll<HTMLElement>(".written_dccon").forEach(applyDcconBlock);
+        };
+
+        const scheduleRerunBlockFilters = () => {
+            if (this.memory.rerunTimer !== null) {
+                window.clearTimeout(this.memory.rerunTimer);
+            }
+
+            this.memory.rerunTimer = window.setTimeout(() => {
+                this.memory.rerunTimer = null;
+                rerunBlockFilters();
+            }, 50);
         };
 
         this.memory.uuid = filter.add(".ub-writer", applyWriterBlock, {
@@ -167,37 +213,21 @@ export default {
             neverExpire: true
         });
 
-        this.memory.refreshHandler = eventBus.on("refresh", rerunBlockFilters);
+        this.memory.refreshHandler = eventBus.on("refresh", scheduleRerunBlockFilters);
 
-        this.memory.uuid2 = filter.add(
-            ".written_dccon",
-            (element) => {
-                if (!gallery) return;
+        this.memory.uuid2 = filter.add(".written_dccon", applyDcconBlock, {
+            neverExpire: true
+        });
 
-                const src = element.getAttribute("src") ?? element.getAttribute("data-src") ?? "";
-                const dccon = src.replace(/^.*no=/g, "").replace(/^&.*$/g, "");
-
-                if (block.check("DCCON", dccon, gallery)) {
-                    const comment = element.closest<HTMLElement>(".ub-content");
-                    const hideTarget = comment ?? element.closest<HTMLElement>(".comment_dccon");
-
-                    if (!hideTarget) return;
-
-                    if (this.status.replyRemove) {
-                        const next = hideTarget.nextElementSibling as HTMLElement | null;
-
-                        if (next && !next.classList.contains("ub-content") && next.querySelector(":scope > .reply")) {
-                            hideElement(next, this.status.blur);
-                        }
-                    }
-
-                    hideElement(hideTarget, this.status.blur);
-                }
-            },
-            {
-                neverExpire: true
+        if (location.pathname.includes("/view/")) {
+            const commentRoot = document.querySelector(".view_comment, .comment_box");
+            if (commentRoot) {
+                this.memory.commentObserver = new MutationObserver(scheduleRerunBlockFilters);
+                this.memory.commentObserver.observe(commentRoot, {childList: true, subtree: true});
             }
-        );
+        }
+
+        scheduleRerunBlockFilters();
 
         this.memory.contextMenuHandler = (event: MouseEvent) => {
             if (!(event.target instanceof Element)) return;
@@ -275,6 +305,16 @@ export default {
 
         if (this.memory.refreshHandler) this.memory.refreshHandler();
 
+        if (this.memory.commentObserver) {
+            this.memory.commentObserver.disconnect();
+            this.memory.commentObserver = null;
+        }
+
+        if (this.memory.rerunTimer !== null) {
+            window.clearTimeout(this.memory.rerunTimer);
+            this.memory.rerunTimer = null;
+        }
+
         if (this.memory.addBlock) this.memory.addBlock();
 
         if (this.memory.requestBlock) this.memory.requestBlock();
@@ -296,6 +336,8 @@ export default {
         uuid2: string | null;
         uuid3: string | null;
         refreshHandler: (() => void) | null;
+        commentObserver: MutationObserver | null;
+        rerunTimer: number | null;
         selected: {
             nick: string | null;
             uid: string | null;

@@ -86,6 +86,13 @@ let blockModeCache: BlockModeCache = {
     TAB: BLOCK_DETECT_MODE.SAME
 };
 
+let resolveBlockReady: () => void = () => {};
+
+/** Resolves after block list/mode caches are loaded from storage. */
+export const blockReady = new Promise<void>((resolve) => {
+    resolveBlockReady = resolve;
+});
+
 const isBlockValue = (value: unknown): value is RefresherBlockValue => {
     if (!value || typeof value !== "object") return false;
 
@@ -155,9 +162,12 @@ const normalizeBlockMode = (
         blockModeStorage[key].watch((newValue) => {
             if (!newValue) return;
             blockModeCache[key] = normalizeBlockMode(newValue, blockModeCache[key]);
+            clearCompiledCaches();
             eventBus.emit("refresh");
         });
     }
+
+    resolveBlockReady();
 })();
 
 const checkValidType = (type: string) => {

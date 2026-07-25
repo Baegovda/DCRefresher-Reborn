@@ -83,7 +83,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.6`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.7`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
@@ -246,6 +246,16 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.1.7 | type: patch | release: no
+
+- **task**: redesign Block tab layout (sidebar categories, list view, search)
+- **files**: BlockTab.vue, BlockListItem.vue, useBlocks.ts, popup.scss, package.json, AGENTS.md
+- **root_cause**: user request for intuitive/systematic block settings UI
+- **fix**: two-column layout with grouped nav, per-type mode control, search, row-based list items
+- **verify**: pending
+- **commit**: pending
+- **tag**: none
 
 ### [2026-07-26] v5.1.6 | type: patch | release: no
 

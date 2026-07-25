@@ -128,6 +128,11 @@ export function useBlocks() {
         }
     };
 
+    const setBlockMode = async (type: RefresherBlockType, mode: RefresherBlockDetectMode) => {
+        blockModes.value[type] = mode;
+        await blockModeStorage[type].setValue(mode);
+    };
+
     const exportBlock = () => copyToClipboard(blocks);
 
     const importBlock = async () => {
@@ -178,6 +183,7 @@ export function useBlocks() {
         removeAllBlockedUser,
         editBlockedUser,
         editBlockMode,
+        setBlockMode,
         exportBlock,
         importBlock
     };

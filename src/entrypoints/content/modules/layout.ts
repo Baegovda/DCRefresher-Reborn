@@ -62,49 +62,57 @@ export default {
             name: "갤러리 뷰 숨기기",
             desc: "갤러리 정보, 최근 방문 갤러리 영역을 숨깁니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         hideUselessView: {
             name: "잡다 링크 숨기기",
             desc: "이슈줌, 타갤 개념글, 뉴스, 힛갤등의 컨텐츠를 오른쪽 영역에서 숨깁니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         hideNft: {
             name: "NFT 숨기기",
             desc: "NFT 관련 내용을 숨깁니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         hideGalleryImage: {
             name: "갤러리 대문 숨기기",
             desc: "갤러리 대문을 숨깁니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         pushToRight: {
             name: "본문 영역 전체로 확장",
             desc: `"잡다 링크 숨기기" 옵션이 켜진 경우 본문 영역을 확장합니다.`,
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         removeNotice: {
             name: "갤러리 공지 숨기기",
             desc: "글 목록에서 공지사항을 숨깁니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         removeDCNotice: {
             name: "디시 공지 숨기기",
             desc: "글 목록에서 운영자의 게시글을 숨깁니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         removeGamemeca: {
             name: "게임메카 숨기기",
             desc: "글 목록에서 게임메카 게시글을 숨깁니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         }
     },
     update: {

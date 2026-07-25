@@ -51,13 +51,15 @@ export default {
             name: "검색 중 페이지 새로고침 안함",
             desc: "사이트 내부 검색 기능을 사용 중일시 새로고침을 사용하지 않습니다.",
             type: "check",
-            default: true
+            default: true,
+            advanced: true
         },
         doNotColorVisited: {
             name: "방문 링크 색상 지정 비활성화",
             desc: "Firefox와 같이 방문한 링크 색상 지정이 느린 브라우저에서 깜빡거리는 현상을 완화시킵니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         }
     },
     shortcuts: {

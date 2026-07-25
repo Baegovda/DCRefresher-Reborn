@@ -1,5 +1,9 @@
 <template>
-  <div id="refresher-app">
+  <div
+      id="refresher-app"
+      :style="{height: `${height}px`}"
+      class="refresher-app-shell"
+  >
     <BlockDialog
         :block-detect-mode-type-names="blockDetectModeTypeNames"
         :block-key-names="blockKeyNames"
@@ -34,7 +38,8 @@
       </button>
     </div>
 
-    <transition-group name="refresher-slide-left">
+    <div class="refresher-app__body">
+      <transition-group name="refresher-slide-left">
       <GeneralTab
           v-if="tab === 0"
           key="tab1"
@@ -63,7 +68,10 @@
           v-else-if="tab === 6"
           key="tab7"
       />
-    </transition-group>
+      </transition-group>
+    </div>
+
+    <PopupResizeHandle :on-resize-start="startResize"/>
   </div>
 </template>
 
@@ -71,6 +79,7 @@
 import {provide} from "vue";
 
 import BlockDialog from "./components/BlockDialog.vue";
+import PopupResizeHandle from "./components/PopupResizeHandle.vue";
 import GeneralTab from "./tabs/GeneralTab.vue";
 import AdvancedTab from "./tabs/AdvancedTab.vue";
 import BlockTab from "./tabs/BlockTab.vue";
@@ -84,8 +93,10 @@ import {useMemos} from "./composables/useMemos";
 import {useSettings} from "./composables/useSettings";
 import {useData} from "./composables/useData";
 import {usePopupTab} from "./composables/usePopupTab";
+import {usePopupResize} from "./composables/usePopupResize";
 
 const {tab, tabs} = usePopupTab();
+const {height, startResize} = usePopupResize();
 
 const blocksComposable = useBlocks();
 const memosComposable = useMemos();

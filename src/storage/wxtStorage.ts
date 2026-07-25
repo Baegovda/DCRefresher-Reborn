@@ -60,6 +60,10 @@ export const popupLastTabStorage = storage.defineItem<number>("local:refresher:p
     defaultValue: 0
 });
 
+export const popupHeightStorage = storage.defineItem<number>("local:refresher:popup:height", {
+    defaultValue: 480
+});
+
 export const updateStorage = {
     lastCheck: storage.defineItem<number>("local:refresher:update:lastCheck", {defaultValue: 0}),
     latestVersion: storage.defineItem<string>("local:refresher:update:latestVersion", {defaultValue: ""}),

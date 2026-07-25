@@ -26,25 +26,29 @@ export default {
             name: "선택한 유저 전부 체크",
             desc: "Shift키를 누른 상태로 체크박스를 눌러 대상 유저 전부를 체크합니다. (아이디, IP, 이름 순서)",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         checkViaShift: {
             name: "Shift 다중 체크",
             desc: "Shift키를 누른 상태로 드래그해 여러 항목을 체크합니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         checkCommentViaCtrl: {
             name: "Ctrl 대댓글 체크",
             desc: "Ctrl키를 누른 상태로 댓글을 클릭하면 대댓글도 체크합니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         checkRatio: {
             name: "글댓비 표시",
             desc: "글댓비를 표시합니다. (1시간 마다 갱신, 새 글 작성시에만 조회)",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         alarmRatio: {
             name: "깡계 알림",
@@ -53,25 +57,29 @@ export default {
             default: 0,
             min: 0,
             max: 5000,
-            step: 10
+            step: 10,
+            advanced: true
         },
         deleteViaCtrl: {
             name: "Ctrl로 삭제",
             desc: "Ctrl키를 누른 상태로 게시글을 클릭해 삭제합니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         checkPermBan: {
             name: "갱차 조회",
             desc: "갱신 차단 여부를 조회합니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         enableGifControl: {
             name: "GIF 조작 기능 활성화",
             desc: "GIF를 제어할 수 있는 기능을 활성화합니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         }
     },
     func() {

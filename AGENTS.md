@@ -83,7 +83,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.5`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.6`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
@@ -248,6 +248,13 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.2.6 | type: patch | release: 5.2.6
+
+- **task**: 고급 탭 설정 표시 + 설정 팝업 세로 리사이즈
+- **files**: preview/layout/manage/refresh/block/fonts/userinfo modules (`advanced: true`), AdvancedTab.vue, App.vue, PopupResizeHandle.vue, usePopupResize.ts, popup.scss, wxtStorage.ts
+- **fix**: 고급 탭에 미리보기·레이아웃·관리 등 세부 옵션 분리; 팝업 하단 드래그로 높이 조절(360–720px, 저장)
+- **tag**: 5.2.6
 
 ### [2026-07-26] v5.2.5 | type: patch | release: 5.2.5
 

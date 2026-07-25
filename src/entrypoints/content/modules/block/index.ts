@@ -65,13 +65,15 @@ export default {
             name: "대댓글 삭제",
             desc: "차단된 댓글의 대댓글을 함께 삭제합니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         },
         blur: {
             name: "블러 처리",
             desc: "차단된 내용을 블러 처리합니다.",
             type: "check",
-            default: false
+            default: false,
+            advanced: true
         }
     },
     async func() {

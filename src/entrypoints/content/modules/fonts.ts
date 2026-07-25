@@ -18,7 +18,8 @@ export default {
             name: "디시인사이드 폰트 교체",
             desc: "미리보기 창 같은 DCRefresher Reborn의 폰트 뿐만 아니라 디시인사이드의 폰트까지 교체합니다.",
             type: "check",
-            default: true
+            default: true,
+            advanced: true
         },
         bodyFontSize: {
             name: "본문 폰트 크기 지정",
@@ -28,7 +29,8 @@ export default {
             min: 5,
             max: 30,
             step: 1,
-            unit: "pt"
+            unit: "pt",
+            advanced: true
         }
     },
     update: {

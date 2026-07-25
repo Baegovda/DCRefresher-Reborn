@@ -53,6 +53,7 @@ Skip for pure new features or refactors with no bug.
   ```
 - Manual smoke test when behavior changes: `bun dev` → load extension → test on `gall.dcinside.com`
 - **Do not** create other memo/log files — append only to **§4 Session Log** below
+- **User-facing changelog:** maintain `CHANGELOG.md` and `docs/changelog.html` on every release (not §4)
 
 ### 1.3 After work — user report (fixed template)
 
@@ -83,7 +84,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.7`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.8`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
@@ -96,13 +97,14 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 When any task completes (code, docs, or policy), **always** run the full backup/release/push flow. Do **not** stop at commit only. User does not need to say `릴리즈` again.
 
 1. Bump `package.json` patch (+1) if anything changed since the last tag (`src/` → required; docs/policy → still bump patch for release traceability)
-2. `bun zip` — verify `.output/*-chrome.zip` and `*-firefox.zip`
-3. Commit + `git push origin` (current branch, usually `develop`)
-4. `git tag X.Y.Z` + `git push origin X.Y.Z` (no `v` prefix)
-5. GitHub Release with both zips attached
-6. CI miss / empty assets → `gh release create` or `gh release upload` with built zips
-7. **Hide old releases:** `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/hide-old-releases.ps1` — sets every release except the newest to **Draft** (public Releases page shows only Latest; git tags remain)
-8. Report release URL; remind user to install `*-chrome.zip` (not Source code zip)
+2. **Update user-facing changelog:** `CHANGELOG.md` + `docs/changelog.html` (Korean, newest first; 추가/수정/변경 구분)
+3. `bun zip` — verify `.output/*-chrome.zip` and `*-firefox.zip`
+4. Commit + `git push origin` (current branch, usually `develop`)
+5. `git tag X.Y.Z` + `git push origin X.Y.Z` (no `v` prefix)
+6. GitHub Release with both zips attached (release notes may summarize `CHANGELOG.md` entry)
+7. CI miss / empty assets → `gh release create` or `gh release upload` with built zips
+8. **Hide old releases:** `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/hide-old-releases.ps1` — sets every release except the newest to **Draft** (public Releases page shows only Latest; git tags remain)
+9. Report release URL; remind user to install `*-chrome.zip` (not Source code zip)
 
 **User release request** — same flow as above; never skip because work was "small" or "already committed".
 
@@ -248,6 +250,13 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.2.8 | type: docs | release: 5.2.8
+
+- **task**: 업데이트 로그 체계화 (CHANGELOG.md, docs/changelog.html, README 링크)
+- **files**: CHANGELOG.md, docs/changelog.html, README.md, AGENTS.md
+- **fix**: 릴리즈마다 CHANGELOG + HTML 페이지 갱신 정책 추가
+- **tag**: 5.2.8
 
 ### [2026-07-26] v5.2.7 | type: patch | release: 5.2.7
 

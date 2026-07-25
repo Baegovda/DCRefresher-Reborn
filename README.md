@@ -32,6 +32,14 @@
 
 설정은 확장 아이콘을 눌러 팝업에서 바꿀 수 있고, 마지막으로 보던 탭이 다시 열립니다.
 
+## 업데이트 로그
+
+버전별 변경 사항은 아래에서 확인할 수 있습니다.
+
+- **[CHANGELOG.md](./CHANGELOG.md)** — 마크다운 (GitHub에서 바로 읽기)
+- **[업데이트 로그 페이지](./docs/changelog.html)** — HTML (목차·버전별 상세)
+- **[GitHub Releases](https://github.com/Baegovda/DCRefresher-Reborn/releases/latest)** — 최신 빌드 다운로드
+
 ## 설치 (개발 빌드)
 
 스토어 배포본이 아니라 이 저장소에서 직접 쓰려면:

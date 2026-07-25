@@ -83,13 +83,25 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.8`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.1`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
-| Small | bugfix, typo, style, docs-only | **patch +1** | required | none |
+| Small | bugfix, typo, style, docs-only | **patch +1** | required | none (unless user requests release — see below) |
 | Feature / important | new module, new setting, behavior change | **minor +1** (patch → 0) | required | **tag push → CI Release** |
 | Breaking | storage key change, API removal | **major +1** | required | tag + Release + user approval |
+
+**User release request (overrides table above)**
+
+When the user asks to release (e.g. `릴리즈`, `릴리즈백업푸시`, `커밋푸시릴리즈`, `release`) — **always** run the full release flow, even for small/docs-only work or when there were no new commits since the last tag (re-tag/re-publish only if assets are missing).
+
+1. Bump `package.json` patch if any commit exists since the last tag; otherwise keep version
+2. `bun zip` (local build; verify `*-chrome.zip` / `*-firefox.zip` in `.output/`)
+3. Commit + push `develop` (or current branch)
+4. `git tag X.Y.Z` + `git push origin X.Y.Z` (no `v` prefix)
+5. GitHub Release with both zips attached
+6. If CI does not run or assets are missing: `gh release create` (or `gh release upload`) with built zips — do not stop at commit/push only
+7. Report release URL and remind user to install `*-chrome.zip` (not Source code zip)
 
 **Every work session**
 
@@ -102,15 +114,16 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 - Message: one English line, why-focused
 - Example: `fix(preview): prevent frame leak on rapid close`
 
-**Release (feature/important only)**
+**Release (default: feature/important; user request: always)**
 
-1. Optional local check: `bun zip`
+1. `bun zip` — required before tagging (local verify or CI input)
 2. `git tag X.Y.Z` — CI pattern `*.*.*` in `.github/workflows/build.yml` (**no** `v` prefix)
 3. `git push origin HEAD` + `git push origin X.Y.Z`
 4. GitHub Actions → zip + Chrome Web Store + Firefox AMO submit
-5. Push only when user grants remote access — otherwise report "태그 push 대기"
+5. CI miss / empty assets → manual `gh release create` or `gh release upload` with `.output/*-chrome.zip` and `*-firefox.zip`
+6. Push only when user grants remote access — otherwise report "태그 push 대기"
 
-**Small work:** commit only. No tag, no Release.
+**Small work (agent-initiated only):** commit only. No tag, no Release — unless the user explicitly asked for a release (see **User release request** above).
 
 **Dev vs release build**
 
@@ -246,6 +259,16 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.2.1 | type: docs | release: no
+
+- **task**: document user-mandated release policy in AGENTS.md
+- **files**: AGENTS.md
+- **root_cause**: user asked for release every time; agent sometimes stopped at commit/push; policy still said "small work = no release"
+- **fix**: added **User release request** override (릴리즈/릴리즈백업푸시 → full zip + tag + GitHub Release); CI fallback via `gh release`; current version → 5.2.1
+- **verify**: grep AGENTS.md for "User release request"
+- **commit**: pending
+- **tag**: none
 
 ### [2026-07-26] v5.1.7 | type: patch | release: no
 

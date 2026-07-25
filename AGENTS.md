@@ -11,6 +11,27 @@ WXT browser extension (Vue 3 + TypeScript + Bun) that enhances dcinside.com. Use
 
 All work on this project is done by AI agents. Follow this checklist every session.
 
+### 1.0 Facts first — no guessing (all responses)
+
+**Never answer from assumption.** Investigate the repo, runtime, or user-provided evidence **before** stating how something works, what an icon/UI means, or what caused a bug.
+
+**Required before claiming something as fact:**
+
+1. **Read primary sources** — relevant source files, `package.json`, `wxt.config.ts`, built `.output/`, `AGENTS.md`, user screenshots (open/read image files when provided)
+2. **Search the codebase** — grep/glob for symbols, config keys, icon paths, manifest fields
+3. **Run checks when applicable** — terminal commands, build output, manifest contents (do not skip because the question seems simple)
+4. **Label uncertainty** — if not verified, say **「추정」** or **「확인 필요」** and list what was / wasn't checked. Do **not** present guesses as facts.
+
+**Forbidden:**
+
+- Identifying UI elements (icons, tray apps, errors) by vague resemblance without checking this project or the user's context
+- Citing files or APIs that were not confirmed to exist in this repo (grep first)
+- Filling gaps with generic web-extension or tooling knowledge when project-specific evidence is available
+
+**Good example:** User asks about a toolbar icon → read `src/assets/icon.png`, `.output/*/icons/*.png`, `manifest.json` → report it is this extension's icon and whether Chrome graying applies.
+
+**Bad example:** Small gray "R" icon → guess AutoHotkey paused (wrong; it was DCRefresher's own icon).
+
 ### 1.1 Before work — explain the problem (bug/fix tasks)
 
 Before editing code, explain to the user in **beginner-friendly** terms (3–5 sentences):
@@ -225,6 +246,16 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.1.2 | type: docs | release: no
+
+- **task**: add §1.0 facts-first policy (no guessing; investigate before answering)
+- **files**: AGENTS.md
+- **root_cause**: agent misidentified extension icon as unrelated app
+- **fix**: mandatory investigate/read/run/search rules + good/bad example
+- **verify**: n/a
+- **commit**: pending
+- **tag**: none
 
 ### [2026-07-26] v5.1.2 | type: patch | release: no
 

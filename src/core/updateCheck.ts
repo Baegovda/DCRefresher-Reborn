@@ -158,7 +158,7 @@ export const applyExtensionUpdate = async (): Promise<{ok: boolean; error?: stri
             saveAs: false
         });
 
-        await browser.tabs.create({url: status.releaseUrl});
+        await browser.tabs.create({url: "chrome://extensions/"});
 
         return {ok: true};
     } catch (error) {

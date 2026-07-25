@@ -83,30 +83,27 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.2`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.3`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
-| Small | bugfix, typo, style, docs-only | **patch +1** | required | none (unless user requests release — see below) |
-| Feature / important | new module, new setting, behavior change | **minor +1** (patch → 0) | required | **tag push → CI Release** |
+| Small | bugfix, typo, style, docs-only | **patch +1** | required | **tag + Release** (see **Every work session**) |
+| Feature / important | new module, new setting, behavior change | **minor +1** (patch → 0) | required | **tag + Release** |
 | Breaking | storage key change, API removal | **major +1** | required | tag + Release + user approval |
 
-**User release request (overrides table above)**
+**Every work session (default — always at task end)**
 
-When the user asks to release (e.g. `릴리즈`, `릴리즈백업푸시`, `커밋푸시릴리즈`, `release`) — **always** run the full release flow, even for small/docs-only work or when there were no new commits since the last tag (re-tag/re-publish only if assets are missing).
+When any task completes (code, docs, or policy), **always** run the full backup/release/push flow. Do **not** stop at commit only. User does not need to say `릴리즈` again.
 
-1. Bump `package.json` patch if any commit exists since the last tag; otherwise keep version
-2. `bun zip` (local build; verify `*-chrome.zip` / `*-firefox.zip` in `.output/`)
-3. Commit + push `develop` (or current branch)
+1. Bump `package.json` patch (+1) if anything changed since the last tag (`src/` → required; docs/policy → still bump patch for release traceability)
+2. `bun zip` — verify `.output/*-chrome.zip` and `*-firefox.zip`
+3. Commit + `git push origin` (current branch, usually `develop`)
 4. `git tag X.Y.Z` + `git push origin X.Y.Z` (no `v` prefix)
 5. GitHub Release with both zips attached
-6. If CI does not run or assets are missing: `gh release create` (or `gh release upload`) with built zips — do not stop at commit/push only
-7. Report release URL and remind user to install `*-chrome.zip` (not Source code zip)
+6. CI miss / empty assets → `gh release create` or `gh release upload` with built zips
+7. Report release URL; remind user to install `*-chrome.zip` (not Source code zip)
 
-**Every work session**
-
-- Changes under `src/` or anything affecting runtime → **must** bump `package.json` version
-- AGENTS.md policy/log only → version bump optional
+**User release request** — same flow as above; never skip because work was "small" or "already committed".
 
 **Commit**
 
@@ -114,16 +111,7 @@ When the user asks to release (e.g. `릴리즈`, `릴리즈백업푸시`, `커�
 - Message: one English line, why-focused
 - Example: `fix(preview): prevent frame leak on rapid close`
 
-**Release (default: feature/important; user request: always)**
-
-1. `bun zip` — required before tagging (local verify or CI input)
-2. `git tag X.Y.Z` — CI pattern `*.*.*` in `.github/workflows/build.yml` (**no** `v` prefix)
-3. `git push origin HEAD` + `git push origin X.Y.Z`
-4. GitHub Actions → zip + Chrome Web Store + Firefox AMO submit
-5. CI miss / empty assets → manual `gh release create` or `gh release upload` with `.output/*-chrome.zip` and `*-firefox.zip`
-6. Push only when user grants remote access — otherwise report "태그 push 대기"
-
-**Small work (agent-initiated only):** commit only. No tag, no Release — unless the user explicitly asked for a release (see **User release request** above).
+**Release** — covered by **Every work session** above (always tag + GitHub Release + push).
 
 **Dev vs release build**
 
@@ -259,6 +247,13 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.2.3 | type: patch | release: 5.2.3
+
+- **task**: update button opens chrome://extensions after zip download; policy = always release at task end
+- **files**: updateCheck.ts, useUpdate.ts, AGENTS.md, package.json
+- **fix**: applyExtensionUpdate tabs.create → chrome://extensions/; **Every work session** now mandates backup/release/push always
+- **tag**: 5.2.3
 
 ### [2026-07-26] v5.2.1 | type: docs | release: no
 

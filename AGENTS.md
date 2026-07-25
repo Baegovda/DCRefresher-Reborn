@@ -254,7 +254,7 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 - **root_cause**: agent misidentified extension icon as unrelated app
 - **fix**: mandatory investigate/read/run/search rules + good/bad example
 - **verify**: n/a
-- **commit**: pending
+- **commit**: e4276b3
 - **tag**: none
 
 ### [2026-07-26] v5.1.2 | type: patch | release: no

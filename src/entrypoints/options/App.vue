@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import {provide, ref} from "vue";
+import {provide} from "vue";
 
 import BlockDialog from "../popup/components/BlockDialog.vue";
 import GeneralTab from "../popup/tabs/GeneralTab.vue";
@@ -73,17 +73,9 @@ import {useBlocks} from "../popup/composables/useBlocks";
 import {useMemos} from "../popup/composables/useMemos";
 import {useSettings} from "../popup/composables/useSettings";
 import {useData} from "../popup/composables/useData";
+import {usePopupTab} from "../popup/composables/usePopupTab";
 
-const tab = ref(0);
-const tabs = [
-  {id: 0, label: "일반"},
-  {id: 1, label: "고급"},
-  {id: 2, label: "차단"},
-  {id: 3, label: "메모"},
-  {id: 4, label: "모듈"},
-  {id: 5, label: "단축키"},
-  {id: 6, label: "데이터"}
-] as const;
+const {tab, tabs} = usePopupTab();
 
 const blocksComposable = useBlocks();
 const memosComposable = useMemos();

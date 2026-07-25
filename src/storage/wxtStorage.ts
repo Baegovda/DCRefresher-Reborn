@@ -52,6 +52,12 @@ export const moduleSettingStorage = (module: string, key: string) =>
         defaultValue: null
     });
 
+// ===== UI =====
+
+export const popupLastTabStorage = storage.defineItem<number>("local:refresher:popup:lastTab", {
+    defaultValue: 0
+});
+
 // ===== 데이터베이스 (IP/Ban) =====
 
 export const databaseStorage = {

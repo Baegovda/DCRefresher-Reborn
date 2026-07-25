@@ -83,7 +83,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.4`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.5`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
@@ -246,6 +246,16 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.1.5 | type: patch | release: no
+
+- **task**: remember last popup tab when reopening extension UI
+- **files**: wxtStorage.ts, usePopupTab.ts, popup/App.vue, options/App.vue, package.json, AGENTS.md
+- **root_cause**: popup always initialized tab to 0 (일반)
+- **fix**: persist last tab id in local storage; restore on open via usePopupTab composable
+- **verify**: pending
+- **commit**: pending
+- **tag**: none
 
 ### [2026-07-26] v5.1.4 | type: patch | release: no
 

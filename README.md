@@ -1,16 +1,18 @@
 <p align="center">
   <img src="./src/assets/icon.png" width="160" alt="DCRefresher Reborn icon"/>
-  <br><br>
-  <a href="https://github.com/Baegovda/DCRefresher-Reborn/releases">
-    <img src="https://img.shields.io/github/v/release/Baegovda/DCRefresher-Reborn" alt="release">
-  </a>
-  <img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="license">
-  <img src="https://img.shields.io/badge/runtime-Bun-f9f1e1?logo=bun&logoColor=000" alt="bun">
 </p>
+
+![DCRefresher Reborn](https://img.shields.io/badge/DCRefresher%20Reborn-5.2.9-blue)
+![upstream](https://img.shields.io/badge/upstream-green1052%2FDCRefresher--Reborn-lightgrey)
+[![Releases](https://img.shields.io/github/v/release/Baegovda/DCRefresher-Reborn?label=release)](https://github.com/Baegovda/DCRefresher-Reborn/releases)
+<img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="license">
+<img src="https://img.shields.io/badge/runtime-Bun-f9f1e1?logo=bun&logoColor=000" alt="bun">
+
+**[변경 이력 (CHANGELOG)](CHANGELOG.md)** · **[Releases](https://github.com/Baegovda/DCRefresher-Reborn/releases)**
 
 # DCRefresher Reborn: SuckBong Edition
 
-[green1052/DCRefresher-Reborn](https://github.com/green1052/DCRefresher-Reborn)을 기반으로 한 디시인사이드 개선 확장 프로그램입니다.
+**Baegovda**의 커스텀 포크입니다. [green1052/DCRefresher-Reborn](https://github.com/green1052/DCRefresher-Reborn)을 기반으로 디시인사이드 사용 경험을 개선한 브라우저 확장 프로그램입니다.
 
 갤러리·게시글·댓글 사용 경험을 다듬고, 차단·메모·미리보기·새로고침 등 자주 쓰는 기능을 브라우저 안에서 바로 쓸 수 있게 합니다.
 
@@ -31,14 +33,6 @@
 | **관리** | 갤러리 관리 권한이 있을 때 관리 패널 |
 
 설정은 확장 아이콘을 눌러 팝업에서 바꿀 수 있고, 마지막으로 보던 탭이 다시 열립니다.
-
-## 업데이트 로그
-
-버전별 변경 사항은 아래에서 확인할 수 있습니다.
-
-- **[CHANGELOG.md](./CHANGELOG.md)** — 마크다운 (GitHub에서 바로 읽기)
-- **[업데이트 로그 페이지](./docs/changelog.html)** — HTML (목차·버전별 상세)
-- **[GitHub Releases](https://github.com/Baegovda/DCRefresher-Reborn/releases/latest)** — 최신 빌드 다운로드
 
 ## 설치 (개발 빌드)
 

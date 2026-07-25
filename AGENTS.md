@@ -53,7 +53,7 @@ Skip for pure new features or refactors with no bug.
   ```
 - Manual smoke test when behavior changes: `bun dev` → load extension → test on `gall.dcinside.com`
 - **Do not** create other memo/log files — append only to **§4 Session Log** below
-- **User-facing changelog:** maintain `CHANGELOG.md` and `docs/changelog.html` on every release (not §4)
+- **User-facing changelog:** maintain `CHANGELOG.md` on every release ([Keep a Changelog](https://keepachangelog.com/) 형식, GGPK_Custom과 동일 — `CHANGELOG.md` + README 링크만)
 
 ### 1.3 After work — user report (fixed template)
 
@@ -84,7 +84,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.8`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.9`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
@@ -97,7 +97,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 When any task completes (code, docs, or policy), **always** run the full backup/release/push flow. Do **not** stop at commit only. User does not need to say `릴리즈` again.
 
 1. Bump `package.json` patch (+1) if anything changed since the last tag (`src/` → required; docs/policy → still bump patch for release traceability)
-2. **Update user-facing changelog:** `CHANGELOG.md` + `docs/changelog.html` (Korean, newest first; 추가/수정/변경 구분)
+2. **Update user-facing changelog:** `CHANGELOG.md` only (Keep a Changelog: `### Added` / `### Changed` / `### Fixed` / `### Improved`, newest first; README 상단 링크 유지)
 3. `bun zip` — verify `.output/*-chrome.zip` and `*-firefox.zip`
 4. Commit + `git push origin` (current branch, usually `develop`)
 5. `git tag X.Y.Z` + `git push origin X.Y.Z` (no `v` prefix)
@@ -250,6 +250,13 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.2.9 | type: docs | release: 5.2.9
+
+- **task**: changelog GGPK_Custom 방식으로 통일, HTML 페이지 제거
+- **files**: CHANGELOG.md, README.md, AGENTS.md (docs/changelog.html 삭제)
+- **fix**: Keep a Changelog 형식, README 상단 CHANGELOG·Releases 링크
+- **tag**: 5.2.9
 
 ### [2026-07-26] v5.2.8 | type: docs | release: 5.2.8
 

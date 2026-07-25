@@ -21,6 +21,7 @@ export default defineConfig({
             "notifications",
             "storage",
             "scripting",
+            "tabs",
             "unlimitedStorage",
             "clipboardWrite"
         ],

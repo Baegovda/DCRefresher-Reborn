@@ -130,7 +130,20 @@ export const modules = {
 
 export default modules;
 
-onMessage("getSchema", () => {
+let resolveModulesReady: (() => void) | null = null;
+
+export const modulesReady = new Promise<void>((resolve) => {
+    resolveModulesReady = resolve;
+});
+
+export const markModulesReady = () => {
+    resolveModulesReady?.();
+    resolveModulesReady = null;
+};
+
+onMessage("getSchema", async () => {
+    await modulesReady;
+
     const schema: ModuleSchemaMap = {};
     for (const mod of Object.values(moduleStore)) {
         schema[mod.name] = {

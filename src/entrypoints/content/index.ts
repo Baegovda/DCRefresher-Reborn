@@ -3,7 +3,7 @@ import "@/core/memo";
 import "@/core/block";
 
 import filter from "@/core/filtering";
-import modules from "@/core/modules";
+import modules, {markModulesReady} from "@/core/modules";
 import {migrateLocalStorageData} from "@/storage/migration";
 
 const moduleLoaders = import.meta.glob<{ default: RefresherModule }>([
@@ -23,22 +23,26 @@ export default defineContentScript({
     ],
     runAt: "document_start",
     async main() {
-        await migrateLocalStorageData();
+        try {
+            await migrateLocalStorageData();
 
-        const loadedModules = await Promise.all(
-            Object.values(moduleLoaders).map((loader) => loader().then((m) => m.default))
-        );
+            const loadedModules = await Promise.all(
+                Object.values(moduleLoaders).map((loader) => loader().then((m) => m.default))
+            );
 
-        const allModules = loadedModules.filter((m): m is RefresherModule => m !== undefined);
+            const allModules = loadedModules.filter((m): m is RefresherModule => m !== undefined);
 
-        const results = await Promise.allSettled(allModules.map((module) => modules.load(module)));
+            const results = await Promise.allSettled(allModules.map((module) => modules.load(module)));
 
-        results.forEach((result, index) => {
-            if (result.status === "rejected") {
-                console.error(`Failed to load module: ${allModules[index].name}`, result.reason);
-            }
-        });
+            results.forEach((result, index) => {
+                if (result.status === "rejected") {
+                    console.error(`Failed to load module: ${allModules[index].name}`, result.reason);
+                }
+            });
 
-        await filter.run();
+            await filter.run();
+        } finally {
+            markModulesReady();
+        }
     }
 });

@@ -1,47 +1,82 @@
 import {moduleEnableStorage, moduleSettingStorage} from "@/storage/wxtStorage";
 import {sendMessage} from "@/http/messaging";
+import {findDcContentTab, isDcContentScriptUrl} from "@/utils/dcinsideTab";
 import {computed, nextTick, onMounted, ref} from "vue";
+
+export type SettingsLoadState = "loading" | "no-tab" | "no-response" | "ready";
+
+const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+const requestSchema = async (tabId: number, attempts = 5): Promise<ModuleSchemaMap | null> => {
+    for (let attempt = 0; attempt < attempts; attempt++) {
+        try {
+            const schema = await sendMessage("getSchema", undefined, tabId);
+            if (schema && Object.keys(schema).length > 0) {
+                return schema;
+            }
+        } catch (error) {
+            if (attempt === attempts - 1) {
+                console.error("Failed to load module schema:", error);
+            }
+        }
+
+        await sleep(250);
+    }
+
+    return null;
+};
 
 export function useSettings() {
     const modules = ref<ModuleSchemaMap>({});
     const settings = ref<Record<string, Record<string, RefresherSettings>>>({});
+    const loadState = ref<SettingsLoadState>("loading");
 
-    onMounted(async () => {
-        try {
-            const tabs = await browser.tabs.query({});
-            const dcTab = tabs.find((tab) => tab.id && tab.url?.includes("dcinside.com"));
-            if (!dcTab?.id) {
-                return;
-            }
+    const applySchema = async (schema: ModuleSchemaMap) => {
+        const enableMap: ModuleSchemaMap = {};
+        const settingsMap: Record<string, Record<string, RefresherSettings>> = {};
 
-            const schema = await sendMessage("getSchema", undefined, {tabId: dcTab.id});
-            if (!schema) return;
+        for (const [moduleName, moduleSchema] of Object.entries(schema)) {
+            settingsMap[moduleName] = moduleSchema.settings ?? {};
 
-            const enableMap: ModuleSchemaMap = {};
-            const settingsMap: Record<string, Record<string, RefresherSettings>> = {};
-
-            for (const [moduleName, moduleSchema] of Object.entries(schema)) {
-                settingsMap[moduleName] = moduleSchema.settings ?? {};
-
-                for (const [key, setting] of Object.entries(settingsMap[moduleName])) {
-                    const stored = await moduleSettingStorage(moduleName, key).getValue();
-                    if (stored !== null && stored !== undefined) {
-                        (setting.value as unknown) = stored;
-                    }
+            for (const [key, setting] of Object.entries(settingsMap[moduleName])) {
+                const stored = await moduleSettingStorage(moduleName, key).getValue();
+                if (stored !== null && stored !== undefined) {
+                    (setting.value as unknown) = stored;
                 }
-
-                const storedEnable = await moduleEnableStorage(moduleName).getValue();
-                enableMap[moduleName] = {
-                    ...moduleSchema,
-                    enable: storedEnable ?? moduleSchema.default_enable
-                };
             }
 
-            settings.value = settingsMap;
-            modules.value = enableMap;
-        } catch (e) {
-            console.error("Failed to load module schema:", e);
+            const storedEnable = await moduleEnableStorage(moduleName).getValue();
+            enableMap[moduleName] = {
+                ...moduleSchema,
+                enable: storedEnable ?? moduleSchema.default_enable
+            };
         }
+
+        settings.value = settingsMap;
+        modules.value = enableMap;
+        loadState.value = "ready";
+    };
+
+    const loadFromDcTab = async () => {
+        loadState.value = "loading";
+
+        const dcTab = await findDcContentTab();
+        if (!dcTab?.id) {
+            loadState.value = "no-tab";
+            return;
+        }
+
+        const schema = await requestSchema(dcTab.id);
+        if (!schema) {
+            loadState.value = "no-response";
+            return;
+        }
+
+        await applySchema(schema);
+    };
+
+    onMounted(() => {
+        void loadFromDcTab();
     });
 
     const hasSettings = computed(() => Object.keys(settings.value).length > 0);
@@ -86,7 +121,7 @@ export function useSettings() {
             const tabs = await browser.tabs.query({});
             await Promise.all(
                 tabs
-                    .filter((tab) => tab.id && tab.url?.includes("dcinside.com"))
+                    .filter((tab) => tab.id && isDcContentScriptUrl(tab.url))
                     .map((tab) =>
                         sendMessage("updateSettingValue", {
                             name: module,
@@ -159,7 +194,7 @@ export function useSettings() {
         const tabs = await browser.tabs.query({});
         await Promise.all(
             tabs
-                .filter((tab) => tab.id && tab.url?.includes("dcinside.com"))
+                .filter((tab) => tab.id && isDcContentScriptUrl(tab.url))
                 .map((tab) =>
                     sendMessage("updateModuleStatus", {name, value}, tab.id!).catch((e) =>
                         console.error(`Failed to send to tab ${tab.id}:`, e)
@@ -171,6 +206,8 @@ export function useSettings() {
     return {
         modules,
         settings,
+        loadState,
+        reload: loadFromDcTab,
         hasSettings,
         hasModules,
         modulesWithBasicSettings,

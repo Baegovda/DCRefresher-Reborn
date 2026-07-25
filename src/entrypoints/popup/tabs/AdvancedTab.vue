@@ -1,7 +1,10 @@
 <template>
   <div class="tab tab1">
-    <div v-if="!hasSettings">
-      <h3 class="need-refresh">우선 디시인사이드 페이지를 열고 설정 해주세요.</h3>
+    <div v-if="loadState === 'loading'">
+      <h3 class="need-refresh">모듈 설정을 불러오는 중…</h3>
+    </div>
+    <div v-else-if="loadState !== 'ready'">
+      <h3 class="need-refresh">디시 페이지를 새로고침한 뒤 설정을 다시 열어주세요.</h3>
     </div>
     <div v-else>
       <settings-module
@@ -23,7 +26,7 @@ import SettingsModule from "../components/settingsModule.vue";
 const {
   modules,
   settings,
-  hasSettings,
+  loadState,
   modulesWithAdvancedSettings
 } = inject("settings")!;
 </script>

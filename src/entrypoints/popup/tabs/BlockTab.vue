@@ -71,7 +71,7 @@
           <label class="block-tab__mode">
             <span>매칭 모드</span>
             <select
-                :value="blockModes[activeType] ?? 'CONTAIN'"
+                :value="blockModes[activeType] ?? DEFAULT_BLOCK_DETECT_MODE"
                 @change="onModeChange"
             >
               <option
@@ -161,6 +161,7 @@
 
 <script lang="ts" setup>
 import {computed, inject, ref, watch} from "vue";
+import {DEFAULT_BLOCK_DETECT_MODE} from "@/storage/wxtStorage";
 import BlockListItem from "../components/BlockListItem.vue";
 import {PlusIcon} from "../components/icons";
 

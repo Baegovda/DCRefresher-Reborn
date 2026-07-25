@@ -20,9 +20,11 @@ export const blockStorage = BLOCK_TYPES.reduce((acc, type) => {
     return acc;
 }, {} as Record<RefresherBlockType, ReturnType<typeof storage.defineItem<RefresherBlockValue[]>>>);
 
+export const DEFAULT_BLOCK_DETECT_MODE: RefresherBlockDetectMode = "CONTAIN";
+
 export const blockModeStorage = BLOCK_TYPES.reduce((acc, type) => {
     acc[type] = storage.defineItem<RefresherBlockDetectMode>(`local:refresher:block:${type}:mode`, {
-        defaultValue: "SAME"
+        defaultValue: DEFAULT_BLOCK_DETECT_MODE
     });
     return acc;
 }, {} as Record<RefresherBlockType, ReturnType<typeof storage.defineItem<RefresherBlockDetectMode>>>);

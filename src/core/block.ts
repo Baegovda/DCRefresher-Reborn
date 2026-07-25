@@ -1,4 +1,4 @@
-import {BLOCK_TYPES, blockModeStorage, blockStorage} from "@/storage/wxtStorage";
+import {BLOCK_TYPES, blockModeStorage, blockStorage, DEFAULT_BLOCK_DETECT_MODE} from "@/storage/wxtStorage";
 import {eventBus} from "./eventbus";
 
 export const TYPE_NAMES: Record<RefresherBlockType, string> = {
@@ -76,14 +76,14 @@ let blockCache: BlockCache = {
 };
 
 let blockModeCache: BlockModeCache = {
-    NICK: BLOCK_DETECT_MODE.SAME,
-    ID: BLOCK_DETECT_MODE.SAME,
-    IP: BLOCK_DETECT_MODE.SAME,
-    TITLE: BLOCK_DETECT_MODE.CONTAIN,
-    TEXT: BLOCK_DETECT_MODE.CONTAIN,
-    COMMENT: BLOCK_DETECT_MODE.CONTAIN,
-    DCCON: BLOCK_DETECT_MODE.SAME,
-    TAB: BLOCK_DETECT_MODE.SAME
+    NICK: DEFAULT_BLOCK_DETECT_MODE,
+    ID: DEFAULT_BLOCK_DETECT_MODE,
+    IP: DEFAULT_BLOCK_DETECT_MODE,
+    TITLE: DEFAULT_BLOCK_DETECT_MODE,
+    TEXT: DEFAULT_BLOCK_DETECT_MODE,
+    COMMENT: DEFAULT_BLOCK_DETECT_MODE,
+    DCCON: DEFAULT_BLOCK_DETECT_MODE,
+    TAB: DEFAULT_BLOCK_DETECT_MODE
 };
 
 let resolveBlockReady: () => void = () => {};

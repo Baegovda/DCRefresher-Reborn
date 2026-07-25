@@ -1,4 +1,4 @@
-import {BLOCK_TYPES, blockModeStorage, blockStorage} from "@/storage/wxtStorage";
+import {BLOCK_TYPES, blockModeStorage, blockStorage, DEFAULT_BLOCK_DETECT_MODE} from "@/storage/wxtStorage";
 import {BLOCK_DETECT_MODE_TYPE_NAMES, TYPE_NAMES as BLOCK_TYPE_NAMES} from "@/core/block";
 import {onMounted, reactive, ref} from "vue";
 import {copyToClipboard, normalizeBlockImportList, normalizeBlockModeValue, parseImportData} from "../utils/io";
@@ -38,14 +38,14 @@ export function useBlocks() {
         for (const type of BLOCK_TYPES) {
             blocks[type] = normalizeBlockImportList(await blockStorage[type].getValue());
             const mode = normalizeBlockModeValue(await blockModeStorage[type].getValue());
-            if (mode) blockModes.value[type] = mode;
+            blockModes.value[type] = mode ?? DEFAULT_BLOCK_DETECT_MODE;
 
             blockStorage[type].watch((newValue) => {
                 blocks[type] = normalizeBlockImportList(newValue);
             });
             blockModeStorage[type].watch((newValue) => {
                 const mode = normalizeBlockModeValue(newValue);
-                if (mode) blockModes.value[type] = mode;
+                blockModes.value[type] = mode ?? DEFAULT_BLOCK_DETECT_MODE;
             });
         }
     });

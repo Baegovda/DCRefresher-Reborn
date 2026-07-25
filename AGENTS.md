@@ -83,7 +83,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.6`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.7`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
@@ -248,6 +248,13 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.2.7 | type: patch | release: 5.2.7
+
+- **task**: 설정 팝업 최대 높이 제한 제거
+- **files**: usePopupResize.ts
+- **fix**: 720px 상한 제거, 최소 360px만 유지
+- **tag**: 5.2.7
 
 ### [2026-07-26] v5.2.6 | type: patch | release: 5.2.6
 

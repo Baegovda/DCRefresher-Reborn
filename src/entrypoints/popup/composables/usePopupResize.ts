@@ -2,11 +2,10 @@ import {onMounted, ref, watch} from "vue";
 import {popupHeightStorage} from "@/storage/wxtStorage";
 
 export const POPUP_HEIGHT_MIN = 360;
-export const POPUP_HEIGHT_MAX = 720;
 export const POPUP_HEIGHT_DEFAULT = 480;
 
 const clampHeight = (value: number) =>
-    Math.min(POPUP_HEIGHT_MAX, Math.max(POPUP_HEIGHT_MIN, Math.round(value)));
+    Math.max(POPUP_HEIGHT_MIN, Math.round(value));
 
 export const usePopupResize = () => {
     const height = ref(POPUP_HEIGHT_DEFAULT);

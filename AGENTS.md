@@ -233,5 +233,5 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 - **root_cause**: n/a (policy init)
 - **fix**: added workflow, version/commit/release rules, updated project reference (removed stale webStorage/communicate/data module docs), session log section
 - **verify**: n/a (docs only)
-- **commit**: pending
+- **commit**: 024d13a
 - **tag**: none

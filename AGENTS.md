@@ -62,7 +62,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.1`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.2`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
@@ -225,6 +225,16 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.1.2 | type: patch | release: no
+
+- **task**: bump version + SuckBong Edition branding
+- **files**: package.json, wxt.config.ts, popup/index.html, options/index.html, GeneralTab.vue, AGENTS.md
+- **root_cause**: user request custom edition name
+- **fix**: displayName/manifest/UI title → "DCRefresher Reborn: SuckBong Edition", version 5.1.1→5.1.2
+- **verify**: pending
+- **commit**: pending
+- **tag**: none
 
 ### [2026-07-26] v5.1.1 | type: docs | release: no
 

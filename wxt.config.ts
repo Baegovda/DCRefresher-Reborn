@@ -2,13 +2,16 @@ import {defineConfig} from "wxt";
 
 export default defineConfig({
     srcDir: "src",
+    webExt: {
+        startUrls: ["https://gall.dcinside.com"]
+    },
     modules: [
         "@wxt-dev/auto-icons",
         "@wxt-dev/webextension-polyfill",
         "@wxt-dev/module-vue"
     ],
     manifest: {
-        name: "DCRefresher Reborn",
+        name: "DCRefresher Reborn: SuckBong Edition",
         description: "디시인사이드 개선 확장 프로그램",
         permissions: [
             "activeTab",

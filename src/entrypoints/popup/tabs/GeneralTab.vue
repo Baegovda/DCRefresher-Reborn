@@ -9,7 +9,7 @@
       </div>
 
       <div class="text">
-        <h3>DCRefresher Reborn</h3>
+        <h3>DCRefresher Reborn: SuckBong Edition</h3>
         <p>
           <span class="version">{{ version }}</span>
           <a

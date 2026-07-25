@@ -2,7 +2,7 @@ import {updateStorage} from "@/storage/wxtStorage";
 
 export const GITHUB_RELEASE_REPO = "Baegovda/DCRefresher-Reborn";
 export const UPDATE_ALARM_NAME = "refresher-update-check";
-export const UPDATE_CHECK_INTERVAL_MINUTES = 360;
+export const UPDATE_CHECK_INTERVAL_MINUTES = 1;
 
 export type ExtensionUpdateStatus = {
     currentVersion: string;

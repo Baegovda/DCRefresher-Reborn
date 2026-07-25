@@ -39,7 +39,7 @@
       </div>
 
       <p class="update-panel__desc">
-        GitHub 릴리즈를 6시간마다 자동 확인합니다.
+        GitHub 릴리즈를 1분마다 자동 확인합니다.
         <template v-if="status.updateAvailable">
           최신 버전 <strong>v{{ status.latestVersion }}</strong>을 설치할 수 있습니다.
         </template>

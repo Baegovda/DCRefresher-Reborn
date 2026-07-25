@@ -65,11 +65,24 @@ export default defineBackground(() => {
         }
     ];
 
-    const createContextMenus = async () => {
-        await browser.contextMenus.removeAll();
-        for (const item of contextMenuItems) {
-            browser.contextMenus.create(item);
-        }
+    let contextMenuSetup: Promise<void> | null = null;
+
+    const createContextMenus = (): Promise<void> => {
+        if (contextMenuSetup) return contextMenuSetup;
+
+        contextMenuSetup = (async () => {
+            await browser.contextMenus.removeAll();
+
+            for (const item of contextMenuItems) {
+                if (item.id) {
+                    await browser.contextMenus.remove(item.id).catch(() => {});
+                }
+
+                await browser.contextMenus.create(item);
+            }
+        })();
+
+        return contextMenuSetup;
     };
 
     browser.contextMenus.onClicked.addListener((info, tab) => {
@@ -94,8 +107,11 @@ export default defineBackground(() => {
         }
     });
 
-    browser.runtime.onStartup.addListener(createContextMenus);
-    browser.runtime.onInstalled.addListener(createContextMenus);
+    void createContextMenus();
+
+    browser.runtime.onStartup.addListener(() => {
+        void createContextMenus();
+    });
 
     // ===== Commands: 단축키 → 모든 탭에 broadcast =====
     browser.commands.onCommand.addListener((command) => {
@@ -128,7 +144,7 @@ export default defineBackground(() => {
     };
 
     // ===== Lifecycle =====
-    browser.runtime.onInstalled.addListener(async (details) => {
+    browser.runtime.onInstalled.addListener(async () => {
         await createContextMenus();
         if (import.meta.env.PROD) {
             await updateDatabase();

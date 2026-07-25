@@ -83,7 +83,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.3`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.2.4`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
@@ -101,7 +101,8 @@ When any task completes (code, docs, or policy), **always** run the full backup/
 4. `git tag X.Y.Z` + `git push origin X.Y.Z` (no `v` prefix)
 5. GitHub Release with both zips attached
 6. CI miss / empty assets → `gh release create` or `gh release upload` with built zips
-7. Report release URL; remind user to install `*-chrome.zip` (not Source code zip)
+7. **Hide old releases:** `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/hide-old-releases.ps1` — sets every release except the newest to **Draft** (public Releases page shows only Latest; git tags remain)
+8. Report release URL; remind user to install `*-chrome.zip` (not Source code zip)
 
 **User release request** — same flow as above; never skip because work was "small" or "already committed".
 
@@ -247,6 +248,13 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 ## §4 Session Log
 
 <!-- AI: newest first. humans don't read this. -->
+
+### [2026-07-26] v5.2.4 | type: patch | release: 5.2.4
+
+- **task**: hide all GitHub releases except latest (draft); automate via script + policy
+- **files**: scripts/hide-old-releases.ps1, AGENTS.md, package.json
+- **fix**: older releases → Draft (public sees only Latest); step 7 in release flow
+- **tag**: 5.2.4
 
 ### [2026-07-26] v5.2.3 | type: patch | release: 5.2.3
 

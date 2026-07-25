@@ -60,10 +60,7 @@ const version = ref(
 );
 
 const links = [
-  {text: "GitHub", url: "https://github.com/green1052/DCRefresher-Reborn"},
-  {text: "갤러리", url: "https://gall.dcinside.com/mini/board/lists/?id=bjwg64"},
-  {text: "Discord", url: "https://discord.gg/SSW6Zuyjz6"},
-  {text: "후원", url: "https://www.buymeacoffee.com/green1052"},
+  {text: "GitHub", url: "https://github.com/Baegovda/DCRefresher-Reborn"},
   {text: "도움말", url: "https://dcrefresher.green1052.com"}
 ];
 

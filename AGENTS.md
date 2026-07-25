@@ -83,7 +83,7 @@ Append a structured entry to **§4 Session Log** (newest first). English/structu
 
 ## §2 Version / Commit / Release
 
-**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.5`.
+**Version source:** `package.json` `version` only (WXT manifest follows it). Current: `5.1.6`.
 
 | Change type | Examples | Version bump | Commit | Tag / Release |
 |-------------|----------|--------------|--------|---------------|
@@ -247,6 +247,16 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 
 <!-- AI: newest first. humans don't read this. -->
 
+### [2026-07-26] v5.1.6 | type: patch | release: no
+
+- **task**: remove sponsor/gallery/discord links; point GitHub to Baegovda repo; rewrite README
+- **files**: GeneralTab.vue, README.md, package.json, AGENTS.md
+- **root_cause**: user fork branding; upstream community links not wanted
+- **fix**: links trimmed to GitHub + 도움말; README rewritten for Baegovda/DCRefresher-Reborn
+- **verify**: pending
+- **commit**: pending
+- **tag**: none
+
 ### [2026-07-26] v5.1.5 | type: patch | release: no
 
 - **task**: remember last popup tab when reopening extension UI
@@ -254,7 +264,7 @@ Tag push matching `*.*.*` → `.github/workflows/build.yml`: `bun install` → `
 - **root_cause**: popup always initialized tab to 0 (일반)
 - **fix**: persist last tab id in local storage; restore on open via usePopupTab composable
 - **verify**: pending
-- **commit**: pending
+- **commit**: 87031c4
 - **tag**: none
 
 ### [2026-07-26] v5.1.4 | type: patch | release: no

@@ -11,6 +11,12 @@ import {previewRequest} from "./request";
 import toast from "@/utils/toast";
 import {User} from "@/utils/user";
 
+const plainCommentText = (memo: string): string => {
+    if (!memo.includes("<")) return memo;
+
+    return new DOMParser().parseFromString(memo, "text/html").body.textContent?.trim() ?? memo;
+};
+
 export interface CommentFrameContext {
     frame: PreviewFrame;
     preData: GalleryPreData;
@@ -363,7 +369,7 @@ export function makeCommentFrame(ctx: CommentFrameContext): void {
                         if (!match) return true;
                         check.DCCON = match[1];
                     } else {
-                        check.COMMENT = comment.memo;
+                        check.COMMENT = plainCommentText(comment.memo);
                     }
 
                     const isBlocked = block.checkAll(check, gallery);
@@ -439,4 +445,11 @@ export function makeCommentFrame(ctx: CommentFrameContext): void {
     frame.functions.retry = (useCache = false) => {
         frame.functions.load(useCache);
     };
+
+    const refreshComments = eventBus.on("refresh", () => {
+        if (signal.aborted || !frame.data.comments) return;
+        frame.functions.retry?.(false);
+    });
+
+    signal.addEventListener("abort", refreshComments, {once: true});
 }

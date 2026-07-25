@@ -6,6 +6,31 @@ import {onMessage} from "@/http/messaging";
 import {queryString} from "@/http/http";
 import {handleBlockRequest} from "./request";
 
+const COMMENT_ITEM_SELECTOR = "li.ub-content, .search_comment";
+const COMMENT_TEXT_SELECTOR =
+    ".comment_box .usertxt, .view_comment .usertxt, ul.cmt_list .usertxt, ul.reply_list .usertxt";
+
+const getCommentTextFromWriter = (writer: HTMLElement): string | null => {
+    if (!location.pathname.includes("/view/")) return null;
+
+    const commentItem = writer.closest<HTMLElement>(COMMENT_ITEM_SELECTOR);
+    if (commentItem) {
+        return commentItem.querySelector<HTMLElement>(".usertxt")?.textContent?.trim() ?? null;
+    }
+
+    const commentInfo = writer.closest<HTMLElement>(".reply_info, .cmt_info");
+    return commentInfo?.querySelector<HTMLElement>(".usertxt")?.textContent?.trim() ?? null;
+};
+
+const resolveBlockedTarget = (writer: HTMLElement, parent: HTMLElement): HTMLElement | null => {
+    if (parent.classList.contains("ub-content")) return parent;
+
+    const commentItem = writer.closest<HTMLElement>(COMMENT_ITEM_SELECTOR);
+    if (commentItem) return commentItem;
+
+    return parent.closest<HTMLElement>(".ub-content");
+};
+
 export default {
     name: "컨텐츠 차단",
     description: "유저, 컨텐츠 등의 보고 싶지 않은 컨텐츠들을 삭제합니다.",
@@ -14,6 +39,8 @@ export default {
     memory: {
         uuid: null,
         uuid2: null,
+        uuid3: null,
+        refreshHandler: null,
         selected: {
             nick: null,
             uid: null,
@@ -57,73 +84,90 @@ export default {
             element.style.display = "none";
         };
 
-        this.memory.uuid = filter.add(
-            ".ub-writer",
-            (element) => {
-                if (!gallery) return;
+        const hideReplySibling = (content: HTMLElement) => {
+            if (!this.status.replyRemove) return;
 
-                const parent = element.parentElement;
-                if (!parent) return;
+            const next = content.nextElementSibling as HTMLElement | null;
 
-                const title = parent.querySelector<HTMLElement>(".gall_tit > a:not([class])")?.textContent?.trim() ?? "";
-                const tab = parent.querySelector<HTMLElement>(".gall_subject")?.textContent ?? "";
-
-                const viewWrap = element.closest<HTMLElement>(".view_content_wrap");
-                const text = location.pathname.includes("/view/") && viewWrap
-                    ? viewWrap.querySelector(".write_div")?.textContent?.trim() ?? null
-                    : null;
-
-                const commentInfo = element.closest<HTMLElement>(".reply_info, .cmt_info");
-                const commentContent = location.pathname.includes("/view/") && commentInfo
-                    ? commentInfo.querySelector(".usertxt")?.textContent ?? null
-                    : null;
-
-                const nick = element.dataset.nick ?? null;
-                const uid = element.dataset.uid ?? null;
-                const ip = element.dataset.ip ?? null;
-
-                if (
-                    block.checkAll(
-                        {
-                            TITLE: title,
-                            NICK: nick,
-                            ID: uid,
-                            IP: ip,
-                            COMMENT: commentContent,
-                            TAB: tab
-                        },
-                        gallery
-                    )
-                ) {
-                    const post = parent;
-
-                    if (post.classList.contains("ub-content")) {
-                        hideElement(post, this.status.blur);
-                        return;
-                    }
-
-                    const content = post.closest<HTMLElement>(".ub-content");
-
-                    if (content) {
-                        if (this.status.replyRemove) {
-                            const next = content.nextElementSibling as HTMLElement | null;
-
-                            if (next && !next.classList.contains("ub-content") && next.querySelector(":scope > .reply")) {
-                                hideElement(next, this.status.blur);
-                            }
-                        }
-
-                        hideElement(content, this.status.blur);
-                    }
-                } else if (text && block.check("TEXT", text, gallery) && viewWrap) {
-                    const writeDiv = viewWrap.querySelector<HTMLElement>(".write_div");
-                    if (writeDiv) writeDiv.textContent = "게시글 내용이 차단됐습니다.";
-                }
-            },
-            {
-                neverExpire: true
+            if (next && !next.classList.contains("ub-content") && next.querySelector(":scope > .reply")) {
+                hideElement(next, this.status.blur);
             }
-        );
+        };
+
+        const applyWriterBlock = (element: HTMLElement) => {
+            if (!gallery) return;
+
+            const parent = element.parentElement;
+            if (!parent) return;
+
+            const title = parent.querySelector<HTMLElement>(".gall_tit > a:not([class])")?.textContent?.trim() ?? "";
+            const tab = parent.querySelector<HTMLElement>(".gall_subject")?.textContent ?? "";
+
+            const viewWrap = element.closest<HTMLElement>(".view_content_wrap");
+            const text = location.pathname.includes("/view/") && viewWrap
+                ? viewWrap.querySelector(".write_div")?.textContent?.trim() ?? null
+                : null;
+
+            const commentContent = getCommentTextFromWriter(element);
+
+            const nick = element.dataset.nick ?? null;
+            const uid = element.dataset.uid ?? null;
+            const ip = element.dataset.ip ?? null;
+
+            if (
+                block.checkAll(
+                    {
+                        TITLE: title,
+                        NICK: nick,
+                        ID: uid,
+                        IP: ip,
+                        COMMENT: commentContent,
+                        TAB: tab
+                    },
+                    gallery
+                )
+            ) {
+                const hideTarget = resolveBlockedTarget(element, parent);
+                if (!hideTarget) return;
+
+                hideReplySibling(hideTarget);
+                hideElement(hideTarget, this.status.blur);
+            } else if (text && block.check("TEXT", text, gallery) && viewWrap) {
+                const writeDiv = viewWrap.querySelector<HTMLElement>(".write_div");
+                if (writeDiv) writeDiv.textContent = "게시글 내용이 차단됐습니다.";
+            }
+        };
+
+        const applyCommentTextBlock = (element: HTMLElement) => {
+            if (!gallery) return;
+
+            const commentText = element.textContent?.trim();
+            if (!commentText || !block.check("COMMENT", commentText, gallery)) return;
+
+            const hideTarget =
+                element.closest<HTMLElement>(COMMENT_ITEM_SELECTOR) ??
+                element.closest<HTMLElement>(".ub-content");
+
+            if (!hideTarget) return;
+
+            hideReplySibling(hideTarget);
+            hideElement(hideTarget, this.status.blur);
+        };
+
+        const rerunBlockFilters = () => {
+            document.querySelectorAll<HTMLElement>(".ub-writer").forEach(applyWriterBlock);
+            document.querySelectorAll<HTMLElement>(COMMENT_TEXT_SELECTOR).forEach(applyCommentTextBlock);
+        };
+
+        this.memory.uuid = filter.add(".ub-writer", applyWriterBlock, {
+            neverExpire: true
+        });
+
+        this.memory.uuid3 = filter.add(COMMENT_TEXT_SELECTOR, applyCommentTextBlock, {
+            neverExpire: true
+        });
+
+        this.memory.refreshHandler = eventBus.on("refresh", rerunBlockFilters);
 
         this.memory.uuid2 = filter.add(
             ".written_dccon",
@@ -227,6 +271,10 @@ export default {
 
         if (this.memory.uuid2) filter.remove(this.memory.uuid2);
 
+        if (this.memory.uuid3) filter.remove(this.memory.uuid3);
+
+        if (this.memory.refreshHandler) this.memory.refreshHandler();
+
         if (this.memory.addBlock) this.memory.addBlock();
 
         if (this.memory.requestBlock) this.memory.requestBlock();
@@ -246,6 +294,8 @@ export default {
     memory: {
         uuid: string | null;
         uuid2: string | null;
+        uuid3: string | null;
+        refreshHandler: (() => void) | null;
         selected: {
             nick: string | null;
             uid: string | null;
